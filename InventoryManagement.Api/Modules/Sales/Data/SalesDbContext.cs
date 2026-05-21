@@ -9,6 +9,7 @@ namespace InventoryManagement.Api.Modules.Sales.Data
         : base(options) { }
 
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +32,21 @@ namespace InventoryManagement.Api.Modules.Sales.Data
                     .HasConversion<string>()
                     .HasMaxLength(30); // limite para o texto no banco
             });
+
+            modelBuilder.Entity<OrderItem>(entity =>
+            {
+                entity.ToTable("OrderItems");
+
+                // garantindo a precisão correta para o preço do item
+                entity.Property(i => i.UnitPrice)
+                    .HasColumnType("decimal(12,2)");
+
+                // configuração do relacionamento 1:N e comportamento de exclusão
+                entity.HasOne(i => i.Order)
+                    .WithMany(o => o.Items)
+                    .HasForeignKey(i => i.OrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
-}
+    }
 }
