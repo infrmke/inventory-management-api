@@ -28,6 +28,12 @@ namespace InventoryManagement.Api.Modules.Catalog.Data
                 // e da precisão (price) da tabela (9.999.999.999,99)
                 entity.Property(p => p.Price)
                     .HasColumnType("decimal(12,2)");
+
+                // configuração do relacionamento 1:N e comportamento de exclusão
+                entity.HasOne<Category>()
+                      .WithMany()
+                      .HasForeignKey(p => p.CategoryId)
+                      .OnDelete(DeleteBehavior.Restrict); // não deleta a categoria se houver produtos nela
             });
         }
     }
