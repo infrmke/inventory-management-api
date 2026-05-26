@@ -1,11 +1,11 @@
 ﻿namespace InventoryManagement.Api.Modules.Catalog.DTOs
 {
     public record ProductResponseDto(
-        int Id,
+        Guid Id,
         string Name,
         string Description,
         decimal Price,
         int Stock,
-        int CategoryId
+        Guid CategoryId
     );
 }

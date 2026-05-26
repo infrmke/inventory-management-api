@@ -17,6 +17,6 @@ namespace InventoryManagement.Api.Modules.Catalog.DTOs
         int StockQuantity,
 
         [Required(ErrorMessage = "Category ID is required")]
-        int CategoryId
+        Guid CategoryId
     );
 }
