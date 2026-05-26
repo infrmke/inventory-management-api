@@ -5,13 +5,13 @@ namespace InventoryManagement.Api.Modules.Sales.Models
     public class OrderItem
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; init; }
 
         [Required]
-        public int OrderId { get; set; }
+        public Guid OrderId { get; init; }
 
         [Required]
-        public int ProductId { get; set; }
+        public Guid ProductId { get; init; }
 
         [Required]
         public int Quantity { get; set; }

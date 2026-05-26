@@ -5,7 +5,7 @@ namespace InventoryManagement.Api.Modules.Sales.Models
     public class Order
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; init; }
 
         [Required]
         public DateTime OrderDate { get; set; }

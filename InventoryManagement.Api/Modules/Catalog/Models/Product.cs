@@ -5,7 +5,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Models
     public class Product
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; init; }
 
         [Required]
         [MaxLength(150)]
@@ -21,6 +21,6 @@ namespace InventoryManagement.Api.Modules.Catalog.Models
         public int StockQuantity { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; init; }
     }
 }
