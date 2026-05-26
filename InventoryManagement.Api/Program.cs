@@ -1,11 +1,14 @@
 using InventoryManagement.Api.Modules.Catalog.Data;
+using InventoryManagement.Api.Modules.Catalog.Services;
 using InventoryManagement.Api.Modules.Sales.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+/* CONTROLLERS */
+builder.Services.AddControllers();
+
+/* SERVICES */
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -13,9 +16,11 @@ builder.Services.AddDbContext<CatalogDbContext>(options => options.UseSqlServer(
 
 builder.Services.AddDbContext<SalesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+/* HTTP REQUEST PIPELINE */
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,4 +28,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 app.Run();
