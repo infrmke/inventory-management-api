@@ -21,7 +21,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             return categories.Select(category => new CategoryResponseDto(category.Id, category.Name, category.Description));
         }
 
-        public async Task<CategoryResponseDto?> GetByIdAsync(int id)
+        public async Task<CategoryResponseDto?> GetByIdAsync(Guid id)
         {
             var category = await _context.Categories.FindAsync(id);
 

@@ -22,8 +22,8 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
             var product = await _productService.GetByIdAsync(id);
 

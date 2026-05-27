@@ -28,7 +28,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             ));
         }
 
-        public async Task<ProductResponseDto?> GetByIdAsync(int id)
+        public async Task<ProductResponseDto?> GetByIdAsync(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
 
