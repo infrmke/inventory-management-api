@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Api.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20260527001946_InitialCatalogDb")]
+    [Migration("20260527005620_InitialCatalogDb")]
     partial class InitialCatalogDb
     {
         /// <inheritdoc />
@@ -29,7 +29,8 @@ namespace InventoryManagement.Api.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -50,7 +51,8 @@ namespace InventoryManagement.Api.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");

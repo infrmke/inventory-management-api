@@ -18,12 +18,18 @@ namespace InventoryManagement.Api.Modules.Catalog.Data
             {
                 // definição explícita do nome da tabela
                 entity.ToTable("Categories");
+
+                // configura o Guid Sequencial para a PK
+                entity.Property(c => c.Id)
+                      .HasDefaultValueSql("NEWSEQUENTIALID()");
             });
 
             modelBuilder.Entity<Product>(entity =>
             {
-                // definição explícita do nome
                 entity.ToTable("Products");
+
+                entity.Property(p => p.Id)
+                      .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                 // e da precisão (price) da tabela (9.999.999.999,99)
                 entity.Property(p => p.Price)

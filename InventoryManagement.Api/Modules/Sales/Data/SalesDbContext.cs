@@ -19,6 +19,10 @@ namespace InventoryManagement.Api.Modules.Sales.Data
             {
                 entity.ToTable("Orders");
 
+                // configura o Guid Sequencial para a PK
+                entity.Property(o => o.Id)
+                      .HasDefaultValueSql("NEWSEQUENTIALID()");
+
                 // garantindo a precisão correta para o total do pedido
                 entity.Property(o => o.TotalPrice)
                     .HasColumnType("decimal(12,2)");
@@ -37,7 +41,9 @@ namespace InventoryManagement.Api.Modules.Sales.Data
             {
                 entity.ToTable("OrderItems");
 
-                // garantindo a precisão correta para o preço do item
+                entity.Property(i => i.Id)
+                      .HasDefaultValueSql("NEWSEQUENTIALID()");
+
                 entity.Property(i => i.UnitPrice)
                     .HasColumnType("decimal(12,2)");
 
