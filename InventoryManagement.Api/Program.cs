@@ -1,6 +1,7 @@
 using InventoryManagement.Api.Modules.Catalog.Data;
 using InventoryManagement.Api.Modules.Catalog.Services;
 using InventoryManagement.Api.Modules.Sales.Data;
+using InventoryManagement.Api.Modules.Sales.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,8 @@ builder.Services.AddDbContext<SalesDbContext>(options => options.UseSqlServer(bu
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 
 var app = builder.Build();
 
