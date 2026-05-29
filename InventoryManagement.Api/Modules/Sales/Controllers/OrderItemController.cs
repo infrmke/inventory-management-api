@@ -7,7 +7,7 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
     [Route("api/sales/order-items")]
     public class OrderItemController : ControllerBase
     {
-        public readonly IOrderItemService _orderItemService;
+        private readonly IOrderItemService _orderItemService;
 
         public OrderItemController(IOrderItemService orderItemService)
         {

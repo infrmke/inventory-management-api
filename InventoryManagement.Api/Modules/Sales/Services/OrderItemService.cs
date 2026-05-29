@@ -6,7 +6,7 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 {
     public class OrderItemService : IOrderItemService
     {
-        public readonly SalesDbContext _context;
+        private readonly SalesDbContext _context;
 
         public OrderItemService(SalesDbContext context)
         {
