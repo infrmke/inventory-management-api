@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Api.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20260527005620_InitialCatalogDb")]
+    [Migration("20260530001929_InitialCatalogDb")]
     partial class InitialCatalogDb
     {
         /// <inheritdoc />
@@ -33,7 +33,6 @@ namespace InventoryManagement.Api.Migrations
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 

@@ -8,6 +8,6 @@ namespace InventoryManagement.Api.Modules.Catalog.DTOs
         string Name,
 
         [MaxLength(255, ErrorMessage = "Description cannot exceed 255 characters")]
-        string Description
+        string? Description
     );
 }
