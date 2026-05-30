@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Api.Migrations.SalesDb
 {
     [DbContext(typeof(SalesDbContext))]
-    [Migration("20260527005710_InitialSalesDb")]
+    [Migration("20260530064618_InitialSalesDb")]
     partial class InitialSalesDb
     {
         /// <inheritdoc />
@@ -32,10 +32,8 @@ namespace InventoryManagement.Api.Migrations.SalesDb
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<DateTime>("OrderDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -44,6 +42,9 @@ namespace InventoryManagement.Api.Migrations.SalesDb
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(12,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
