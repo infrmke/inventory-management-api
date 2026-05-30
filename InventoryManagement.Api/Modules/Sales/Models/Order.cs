@@ -1,14 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using InventoryManagement.Api.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace InventoryManagement.Api.Modules.Sales.Models
 {
-    public class Order
+    public class Order : IAuditableEntity
     {
         [Key]
         public Guid Id { get; init; }
-
-        [Required]
-        public DateTime OrderDate { get; set; }
 
         [Required]
         public decimal TotalPrice { get; set; }
@@ -18,5 +16,9 @@ namespace InventoryManagement.Api.Modules.Sales.Models
 
         // relacionamento 1:N (1 pedido pode ter N produtos)
         public virtual ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
     }
 }

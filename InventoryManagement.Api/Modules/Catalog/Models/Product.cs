@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using InventoryManagement.Api.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace InventoryManagement.Api.Modules.Catalog.Models
 {
-    public class Product
+    public class Product : IAuditableEntity
     {
         [Key]
         public Guid Id { get; init; }
@@ -22,5 +23,9 @@ namespace InventoryManagement.Api.Modules.Catalog.Models
 
         [Required]
         public Guid CategoryId { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
     }
 }
