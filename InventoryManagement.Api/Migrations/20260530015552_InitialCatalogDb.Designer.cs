@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Api.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20260530001929_InitialCatalogDb")]
+    [Migration("20260530015552_InitialCatalogDb")]
     partial class InitialCatalogDb
     {
         /// <inheritdoc />
@@ -57,7 +57,6 @@ namespace InventoryManagement.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 

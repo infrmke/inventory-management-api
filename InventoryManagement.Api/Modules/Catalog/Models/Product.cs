@@ -12,7 +12,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Models
         public string Name { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
 
         [Required]
         public decimal Price { get; set; }
@@ -21,6 +21,6 @@ namespace InventoryManagement.Api.Modules.Catalog.Models
         public int StockQuantity { get; set; }
 
         [Required]
-        public Guid CategoryId { get; init; }
+        public Guid CategoryId { get; set; }
     }
 }
