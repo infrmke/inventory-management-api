@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Api.Modules.Catalog.Services;
+﻿using InventoryManagement.Api.Modules.Catalog.Models;
+using InventoryManagement.Api.Modules.Catalog.Services;
 using InventoryManagement.Api.Modules.Sales.Data;
 using InventoryManagement.Api.Modules.Sales.DTOs;
 using InventoryManagement.Api.Modules.Sales.Models;
@@ -38,10 +39,11 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
                 return new OrderResponseDto(
                     order.Id,
-                    order.OrderDate,
                     order.TotalPrice,
                     order.Status,
-                    itemsDto
+                    itemsDto,
+                    order.CreatedAt,
+                    order.UpdatedAt
                 );
             });
         }
@@ -66,10 +68,11 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
             return new OrderResponseDto(
                 order.Id,
-                order.OrderDate,
                 order.TotalPrice,
                 order.Status,
-                itemsDto
+                itemsDto,
+                order.CreatedAt,
+                order.UpdatedAt
             );
         }
 
@@ -86,7 +89,6 @@ namespace InventoryManagement.Api.Modules.Sales.Services
             // instancia um novo pedido com data, status e valor total
             var order = new Order
             {
-                OrderDate = DateTime.UtcNow,
                 TotalPrice = orderItems.Sum(item => item.UnitPrice * item.Quantity),
                 Status = OrderStatus.Pending,
                 Items = orderItems
@@ -108,10 +110,11 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
             return new OrderResponseDto(
                 order.Id,
-                order.OrderDate,
                 order.TotalPrice,
                 order.Status,
-                itemsDto
+                itemsDto,
+                order.CreatedAt,
+                order.UpdatedAt
             );
         }
 
@@ -146,10 +149,11 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
             return new OrderResponseDto(
                 order.Id,
-                order.OrderDate,
                 order.TotalPrice,
                 order.Status,
-                itemsDto
+                itemsDto,
+                order.CreatedAt,
+                order.UpdatedAt
             );
         }
     }

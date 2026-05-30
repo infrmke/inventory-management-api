@@ -18,7 +18,15 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var categories = await _context.Categories.AsNoTracking().ToListAsync();
 
-            return categories.Select(category => new CategoryResponseDto(category.Id, category.Name, category.Description));
+            return categories.Select(category => 
+                new CategoryResponseDto(
+                    category.Id, 
+                    category.Name, 
+                    category.Description, 
+                    category.CreatedAt, 
+                    category.UpdatedAt
+                )
+            );
         }
 
         public async Task<CategoryResponseDto?> GetByIdAsync(Guid id)
@@ -30,7 +38,9 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             return new CategoryResponseDto(
                 category.Id,
                 category.Name,
-                category.Description
+                category.Description,
+                category.CreatedAt,
+                category.UpdatedAt
             );
         }
 
@@ -41,7 +51,13 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            return new CategoryResponseDto(category.Id, category.Name, category.Description);
+            return new CategoryResponseDto(
+                category.Id, 
+                category.Name, 
+                category.Description,
+                category.CreatedAt,
+                category.UpdatedAt
+            );
         }
 
         public async Task<CategoryResponseDto?> UpdateAsync(Guid id, UpdateCategoryDto dto)
@@ -58,7 +74,9 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             return new CategoryResponseDto(
                 category.Id,
                 category.Name,
-                category.Description
+                category.Description,
+                category.CreatedAt,
+                category.UpdatedAt
             );
         }
 

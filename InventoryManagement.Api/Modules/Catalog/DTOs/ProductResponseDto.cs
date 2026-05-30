@@ -6,6 +6,8 @@
         string Description,
         decimal Price,
         int StockQuantity,
-        Guid CategoryId
+        Guid CategoryId,
+        DateTime CreatedAt,
+        DateTime UpdatedAt
     );
 }

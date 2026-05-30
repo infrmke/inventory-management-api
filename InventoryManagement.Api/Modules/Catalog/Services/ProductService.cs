@@ -24,7 +24,9 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
                 product.Description,
                 product.Price,
                 product.StockQuantity,
-                product.CategoryId
+                product.CategoryId,
+                product.CreatedAt,
+                product.UpdatedAt
             ));
         }
 
@@ -40,7 +42,9 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
                 product.Description,
                 product.Price,
                 product.StockQuantity,
-                product.CategoryId
+                product.CategoryId,
+                product.CreatedAt,
+                product.UpdatedAt
             );
         }
 
@@ -64,7 +68,9 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
                 product.Description,
                 product.Price,
                 product.StockQuantity,
-                product.CategoryId
+                product.CategoryId,
+                product.CreatedAt,
+                product.UpdatedAt
             );
         }
 
@@ -88,7 +94,9 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
                 product.Description,
                 product.Price,
                 product.StockQuantity,
-                product.CategoryId
+                product.CategoryId,
+                product.CreatedAt,
+                product.UpdatedAt
             );
         }
         
