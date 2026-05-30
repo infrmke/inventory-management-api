@@ -38,5 +38,15 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
             var result = await _orderService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
+
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> Cancel(Guid id)
+        {
+            var cancelled = await _orderService.CancelAsync(id);
+
+            if (cancelled == null) return NotFound(new { error = "Order not found OR cannot be cancelled" });
+
+            return Ok(cancelled);
+        }
     }
 }

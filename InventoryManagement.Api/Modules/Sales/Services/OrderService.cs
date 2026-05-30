@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Api.Modules.Sales.Data;
+﻿using InventoryManagement.Api.Modules.Catalog.Services;
+using InventoryManagement.Api.Modules.Sales.Data;
 using InventoryManagement.Api.Modules.Sales.DTOs;
 using InventoryManagement.Api.Modules.Sales.Models;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace InventoryManagement.Api.Modules.Sales.Services
     public class OrderService : IOrderService
     {
         private readonly SalesDbContext _context;
+        private readonly IProductService _productService;
 
-        public OrderService(SalesDbContext context)
+        public OrderService(SalesDbContext context, IProductService productService)
         {
             _context = context;
+            _productService = productService;
         }
 
         public async Task<IEnumerable<OrderResponseDto>> GetAllAsync()
@@ -92,6 +95,44 @@ namespace InventoryManagement.Api.Modules.Sales.Services
             // passa a rastrear OrderItem e Order e então os salva no banco
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
+
+            var itemsDto = order.Items.Select(item =>
+                new OrderItemResponseDto(
+                    item.Id,
+                    item.OrderId,
+                    item.ProductId,
+                    item.Quantity,
+                    item.UnitPrice
+                )
+            ).ToList();
+
+            return new OrderResponseDto(
+                order.Id,
+                order.OrderDate,
+                order.TotalPrice,
+                order.Status,
+                itemsDto
+            );
+        }
+
+        public async Task<OrderResponseDto?> CancelAsync(Guid id)
+        {
+            var order = await _context.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null) return null;
+
+            // não faz nada se o pedido já estiver cancelado
+            if (order.Status == OrderStatus.Cancelled) return null;
+
+            // altera o status e salva
+            order.Status = OrderStatus.Cancelled;
+            await _context.SaveChangesAsync();
+
+            // varre os itens do pedido e os devolve ao estoque
+            foreach (var item in order.Items)
+            {
+                await _productService.ReturnStockAsync(item.ProductId, item.Quantity);
+            }
 
             var itemsDto = order.Items.Select(item =>
                 new OrderItemResponseDto(

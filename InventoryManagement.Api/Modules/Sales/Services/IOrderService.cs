@@ -7,5 +7,6 @@ namespace InventoryManagement.Api.Modules.Sales.Services
         Task<IEnumerable<OrderResponseDto>> GetAllAsync();
         Task<OrderResponseDto?> GetByIdAsync(Guid id);
         Task<OrderResponseDto> CreateAsync(CreateOrderDto dto);
+        Task<OrderResponseDto?> CancelAsync(Guid id);
     }
 }
