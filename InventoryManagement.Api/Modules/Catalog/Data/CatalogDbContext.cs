@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Models;
+using InventoryManagement.Api.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Catalog.Data
@@ -41,6 +42,32 @@ namespace InventoryManagement.Api.Modules.Catalog.Data
                       .HasForeignKey(p => p.CategoryId)
                       .OnDelete(DeleteBehavior.Restrict); // não deleta a categoria se houver produtos nela
             });
+        }
+
+        // override para aplicar os campos "CreatedAt" e "UpdatedAt"
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is IAuditableEntity &&
+                           (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entityEntry in entries)
+            {
+                var entity = (IAuditableEntity)entityEntry.Entity;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    entity.CreatedAt = DateTime.UtcNow;
+                    entity.UpdatedAt = DateTime.UtcNow;
+                }
+                else if (entityEntry.State == EntityState.Modified)
+                {
+                    entity.UpdatedAt = DateTime.UtcNow;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

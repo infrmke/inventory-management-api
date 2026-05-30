@@ -1,5 +1,7 @@
 ﻿using InventoryManagement.Api.Modules.Sales.Models;
+using InventoryManagement.Api.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace InventoryManagement.Api.Modules.Sales.Data
 {
@@ -27,10 +29,6 @@ namespace InventoryManagement.Api.Modules.Sales.Data
                 entity.Property(o => o.TotalPrice)
                     .HasColumnType("decimal(12,2)");
 
-                // valor padrão para a data do pedido caso o C# não envie
-                entity.Property(o => o.OrderDate)
-                    .HasDefaultValueSql("GETDATE()");
-
                 // converte o Enum para String ao salvar (o SQL Server não possui um tipo de dado ENUM nativo)
                 entity.Property(o => o.Status)
                     .HasConversion<string>()
@@ -53,6 +51,32 @@ namespace InventoryManagement.Api.Modules.Sales.Data
                     .HasForeignKey(i => i.OrderId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+        }
+
+        // override para aplicar os campos "CreatedAt" e "UpdatedAt"
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is IAuditableEntity &&
+                           (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entityEntry in entries)
+            {
+                var entity = (IAuditableEntity)entityEntry.Entity;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    entity.CreatedAt = DateTime.UtcNow;
+                    entity.UpdatedAt = DateTime.UtcNow;
+                }
+                else if (entityEntry.State == EntityState.Modified)
+                {
+                    entity.UpdatedAt = DateTime.UtcNow;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
