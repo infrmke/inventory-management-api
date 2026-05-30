@@ -38,5 +38,25 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
             var result = await _productService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
+
+        [HttpPut("{id:Guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductDto dto)
+        {
+            var updated = await _productService.UpdateAsync(id, dto);
+
+            if(updated == null) return NotFound(new { error = "Product not found" });
+
+            return Ok(updated);
+        }
+
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var deleted = await _productService.DeleteAsync(id);
+
+            if (!deleted) return NotFound(new { error = "Product not found" });
+
+            return NoContent();
+        }
     }
 }

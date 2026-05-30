@@ -67,5 +67,41 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
                 product.CategoryId
             );
         }
+
+        public async Task<ProductResponseDto?> UpdateAsync(Guid id, UpdateProductDto dto)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null) return null;
+
+            product.Name = dto.Name;
+            product.Description = dto.Description;
+            product.Price = dto.Price;
+            product.StockQuantity = dto.StockQuantity;
+            product.CategoryId = dto.CategoryId;
+
+            await _context.SaveChangesAsync();
+
+            return new ProductResponseDto(
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                product.CategoryId
+            );
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null) return false;
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
