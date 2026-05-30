@@ -8,11 +8,13 @@ namespace InventoryManagement.Api.Modules.Catalog.DTOs
         string Name,
 
         [MaxLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
-        string Description,
+        string? Description,
 
+        [Required(ErrorMessage = "Price cannot be empty")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than zero")]
         decimal Price,
 
+        [Required(ErrorMessage = "Stock cannot be empty")]
         [Range(0, int.MaxValue, ErrorMessage = "Stock cannot be lower than zero")]
         int StockQuantity,
 
