@@ -4,7 +4,7 @@
     {
         Pending,
         Approved,
-        Canceled,
+        Cancelled,
         Shipped
     }
 }
