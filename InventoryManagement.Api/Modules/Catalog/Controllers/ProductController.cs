@@ -70,7 +70,6 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
 
             return Ok(updatedProduct);
         }
-        }
 
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
