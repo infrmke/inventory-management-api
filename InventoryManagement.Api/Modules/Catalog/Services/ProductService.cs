@@ -112,6 +112,23 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
 
             return true;
         }
+
+        public async Task<bool> DeductStockAsync(Guid id, int quantity)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null) return false;
+
+            // verifica se há estoque
+            if (product.StockQuantity < quantity) return false;
+
+            // reduz a qtd do estoque e salva
+            product.StockQuantity -= quantity;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
