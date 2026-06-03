@@ -118,6 +118,81 @@ namespace InventoryManagement.Api.Modules.Sales.Services
             );
         }
 
+        public async Task<OrderResponseDto?> AddItemAsync(Guid id, AddOrderItemDto dto)
+        {
+            var order = await _context.Orders.Include(order => order.Items).FirstOrDefaultAsync(order => order.Id == id);
+
+            if (order == null || order.Status == OrderStatus.Cancelled) return null;
+
+            // verifica se o item já existe
+            var existingItem = order.Items.FirstOrDefault(item => item.ProductId == dto.ProductId);
+
+            // se já existir, soma a nova quantidade
+            if (existingItem != null)
+            {
+                existingItem.Quantity += dto.Quantity;
+            }
+            else
+            {   
+                // caso não, adiciona o item ao pedido
+                order.Items.Add(new OrderItem
+                {
+                    ProductId = dto.ProductId,
+                    Quantity = dto.Quantity,
+                    UnitPrice = dto.UnitPrice
+                });
+            }
+
+            // recalcula o valor total do pedido
+            order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
+
+            await _context.SaveChangesAsync();
+
+            return await GetByIdAsync(id); // devolve o pedido atualizado
+        }
+
+        public async Task<OrderResponseDto?> UpdateItemQuantityAsync(Guid id, Guid productId, UpdateOrderItemQuantityDto dto)
+        {
+            var order = await _context.Orders.Include(order => order.Items).FirstOrDefaultAsync(order => order.Id == id);
+
+            if (order == null || order.Status == OrderStatus.Cancelled) return null;
+
+            var item = order.Items.FirstOrDefault(item => item.ProductId == productId);
+
+            if (item == null) return null;
+
+            // atualiza a qtd
+            item.Quantity = dto.Quantity;
+
+            // recalcula o valor total do pedido
+            order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
+
+            await _context.SaveChangesAsync();
+
+            return await GetByIdAsync(id); // devolve o pedido atualizado
+        }
+
+        public async Task<OrderResponseDto?> RemoveItemAsync(Guid id, Guid productId)
+        {
+            var order = await _context.Orders.Include(order => order.Items).FirstOrDefaultAsync(order => order.Id == id);
+
+            if (order == null || order.Status == OrderStatus.Cancelled) return null;
+
+            var item = order.Items.FirstOrDefault(i => i.ProductId == productId);
+            
+            if (item == null) return null;
+
+            // remove o item
+            order.Items.Remove(item);
+
+            // recalcula o valor total do pedido
+            order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
+
+            await _context.SaveChangesAsync();
+
+            return await GetByIdAsync(id); // devolve o pedido atualizado
+        }
+
         public async Task<OrderResponseDto?> CancelAsync(Guid id)
         {
             var order = await _context.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == id);
