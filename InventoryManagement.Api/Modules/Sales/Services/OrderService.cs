@@ -124,7 +124,12 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
             if (order == null || order.Status == OrderStatus.Cancelled) return null;
 
-            // verifica se o item já existe
+            // verifica se há estoque disponível para a qtd do item
+            var stockDeducted = await _productService.DeductStockAsync(dto.ProductId, dto.Quantity);
+
+            if (!stockDeducted) return null;
+
+            // verifica se o item já existe no pedido
             var existingItem = order.Items.FirstOrDefault(item => item.ProductId == dto.ProductId);
 
             // se já existir, soma a nova quantidade
@@ -143,9 +148,8 @@ namespace InventoryManagement.Api.Modules.Sales.Services
                 });
             }
 
-            // recalcula o valor total do pedido
+            // recalcula o valor total do pedido e salva
             order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
-
             await _context.SaveChangesAsync();
 
             return await GetByIdAsync(id); // devolve o pedido atualizado
@@ -161,14 +165,29 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
             if (item == null) return null;
 
-            // atualiza a qtd
-            item.Quantity = dto.Quantity;
+            // lógica de estoque abaixo
+            int difference = dto.Quantity - item.Quantity;
+
+            if (difference > 0)
+            {
+                // deduz a diferença do estoque se a diff for maior
+                var stockDeducted = await _productService.DeductStockAsync(productId, difference);
+
+                if (!stockDeducted) return null;
+            }
+            else if (difference < 0)
+            {
+                // devolve qtd ao estoque se a diff for menor
+                await _productService.ReturnStockAsync(productId, Math.Abs(difference));
+            }
 
             // recalcula o valor total do pedido
             order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
 
-            await _context.SaveChangesAsync();
+            // atualiza a qtd
+            item.Quantity = dto.Quantity;
 
+            await _context.SaveChangesAsync();
             return await GetByIdAsync(id); // devolve o pedido atualizado
         }
 
@@ -178,12 +197,13 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
             if (order == null || order.Status == OrderStatus.Cancelled) return null;
 
-            var item = order.Items.FirstOrDefault(i => i.ProductId == productId);
+            var item = order.Items.FirstOrDefault(item => item.ProductId == productId);
             
             if (item == null) return null;
 
-            // remove o item
+            // remove o item e devolve a qtd ao estoque
             order.Items.Remove(item);
+            await _productService.ReturnStockAsync(productId, item.Quantity);
 
             // recalcula o valor total do pedido
             order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
