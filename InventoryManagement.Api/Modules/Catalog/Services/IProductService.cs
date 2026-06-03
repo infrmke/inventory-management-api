@@ -14,5 +14,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         // TASK-BASED:
         Task<bool> ReturnStockAsync(Guid id, int quantity);
         Task<bool> DeductStockAsync(Guid id, int quantity);
+        Task<ProductResponseDto?> AdjustStockManuallyAsync(Guid id, AdjustProductStockDto dto);
+        Task<ProductResponseDto?> UpdatePriceAsync(Guid id, UpdateProductPriceDto dto);
     }
 }

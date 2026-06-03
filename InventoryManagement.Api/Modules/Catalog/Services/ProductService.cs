@@ -129,6 +129,53 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             return true;
         }
 
+        public async Task<ProductResponseDto?> AdjustStockManuallyAsync(Guid id, AdjustProductStockDto dto)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null) return null;
+
+            // se o ajuste for negativo, garante que o estoque não vá abaixo de zero
+            if (product.StockQuantity + dto.Quantity < 0) return null;
+
+            // aplica o ajuste e salva
+            product.StockQuantity += dto.Quantity;
+            await _context.SaveChangesAsync();
+
+            return new ProductResponseDto(
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                product.CategoryId,
+                product.CreatedAt,
+                product.UpdatedAt
+            );
+        }
+
+        public async Task<ProductResponseDto?> UpdatePriceAsync(Guid id, UpdateProductPriceDto dto)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null) return null;
+
+            // ajusta o preço e salva
+            product.Price = dto.NewPrice;
+            await _context.SaveChangesAsync();
+
+            return new ProductResponseDto(
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                product.CategoryId,
+                product.CreatedAt,
+                product.UpdatedAt
+            );
+        }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             var product = await _context.Products.FindAsync(id);

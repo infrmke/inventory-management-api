@@ -49,6 +49,29 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
             return Ok(updated);
         }
 
+        [HttpPatch("{id:Guid}/adjust-stock")]
+        public async Task<IActionResult> AdjustStock(Guid id, [FromBody] AdjustProductStockDto dto)
+        {
+            var updatedProduct = await _productService.AdjustStockManuallyAsync(id, dto);
+
+            if (updatedProduct == null)
+                return BadRequest(new { error = "Product not found or invalid stock quantity" });
+
+            return Ok(updatedProduct);
+        }
+
+        [HttpPatch("{id:Guid}/update-price")]
+        public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] UpdateProductPriceDto dto)
+        {
+            var updatedProduct = await _productService.UpdatePriceAsync(id, dto);
+
+            if (updatedProduct == null)
+                return NotFound(new { error = "Product not found" });
+
+            return Ok(updatedProduct);
+        }
+        }
+
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
