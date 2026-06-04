@@ -128,29 +128,30 @@ namespace InventoryManagement.Api.Modules.Sales.Services
             if (order == null) throw new NotFoundException("Order not found");
             if (order.Status == OrderStatus.Cancelled) throw new BadRequestException("Order is not active");
 
-            // verifica se há estoque disponível para a qtd do item
-            var stockDeducted = await _productService.DeductStockAsync(dto.ProductId, dto.Quantity);
+            // verifica se o produto existe
+            var product = await _productService.GetByIdAsync(dto.ProductId);
+            if (product == null) throw new NotFoundException($"Product with ID {dto.ProductId} not found");
 
+            // retira a qtd do estoque
+            var stockDeducted = await _productService.DeductStockAsync(dto.ProductId, dto.Quantity);
             if (!stockDeducted) throw new BadRequestException($"Stock quantity of {dto.Quantity} not available");
 
             // verifica se o item já existe no pedido
             var existingItem = order.Items.FirstOrDefault(item => item.ProductId == dto.ProductId);
 
-            // se já existir, soma a nova quantidade
             if (existingItem != null)
             {
+                // se já existir, soma a nova quantidade
                 existingItem.Quantity += dto.Quantity;
             }
             else
             {
-                // caso não, adiciona o item ao pedido
-                var product = order.Items.FirstOrDefault(item => item.ProductId == dto.ProductId);
-
+                // se não, adiciona o novo item
                 order.Items.Add(new OrderItem
                 {
                     ProductId = dto.ProductId,
                     Quantity = dto.Quantity,
-                    UnitPrice = product.UnitPrice
+                    UnitPrice = product.Price
                 });
             }
 
@@ -158,7 +159,7 @@ namespace InventoryManagement.Api.Modules.Sales.Services
             order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
             await _context.SaveChangesAsync();
 
-            return await GetByIdAsync(id); // devolve o pedido atualizado
+            return await GetByIdAsync(id);
         }
 
         public async Task<OrderResponseDto?> UpdateItemQuantityAsync(Guid id, Guid productId, UpdateOrderItemQuantityDto dto)
@@ -206,7 +207,7 @@ namespace InventoryManagement.Api.Modules.Sales.Services
             if (order.Status == OrderStatus.Cancelled) throw new BadRequestException("Order is not active");
 
             var item = order.Items.FirstOrDefault(item => item.ProductId == productId);
-            
+
             if (item == null) throw new NotFoundException("Product not found");
 
             // remove o item e devolve a qtd ao estoque
