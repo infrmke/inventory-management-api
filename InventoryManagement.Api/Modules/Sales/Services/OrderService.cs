@@ -78,44 +78,46 @@ namespace InventoryManagement.Api.Modules.Sales.Services
 
         public async Task<OrderResponseDto> CreateAsync(CreateOrderDto dto)
         {
-            // cria cada item dentro de uma lista
-            var orderItems = dto.Items.Select(item => new OrderItem
+            // verificação precoce de produto e estoque
+            foreach (var itemDto in dto.Items)
             {
-                ProductId = item.ProductId,
-                Quantity = item.Quantity,
-                UnitPrice = item.UnitPrice
-            }).ToList();
+                var product = await _productService.GetByIdAsync(itemDto.ProductId);
 
-            // instancia um novo pedido com data, status e valor total
+                if (product == null) return null;
+
+                // simula se o estoque suporta a compra
+                if (product.StockQuantity < itemDto.Quantity) return null;
+            }
+
+            // instancia cada item
+            var orderItems = new List<OrderItem>();
+
+            foreach (var itemDto in dto.Items)
+            {
+                await _productService.DeductStockAsync(itemDto.ProductId, itemDto.Quantity);
+
+                var product = await _productService.GetByIdAsync(itemDto.ProductId);
+
+                orderItems.Add(new OrderItem
+                {
+                    ProductId = itemDto.ProductId,
+                    Quantity = itemDto.Quantity,
+                    UnitPrice = product.Price
+                });
+            }
+
+            // instancia o pedido
             var order = new Order
             {
-                TotalPrice = orderItems.Sum(item => item.UnitPrice * item.Quantity),
                 Status = OrderStatus.Pending,
-                Items = orderItems
+                Items = orderItems,
+                TotalPrice = orderItems.Sum(item => item.UnitPrice * item.Quantity)
             };
 
-            // passa a rastrear OrderItem e Order e então os salva no banco
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            var itemsDto = order.Items.Select(item =>
-                new OrderItemResponseDto(
-                    item.Id,
-                    item.OrderId,
-                    item.ProductId,
-                    item.Quantity,
-                    item.UnitPrice
-                )
-            ).ToList();
-
-            return new OrderResponseDto(
-                order.Id,
-                order.TotalPrice,
-                order.Status,
-                itemsDto,
-                order.CreatedAt,
-                order.UpdatedAt
-            );
+            return await GetByIdAsync(order.Id); // devolve o pedido atualizado
         }
 
         public async Task<OrderResponseDto?> AddItemAsync(Guid id, AddOrderItemDto dto)
