@@ -185,11 +185,11 @@ namespace InventoryManagement.Api.Modules.Sales.Services
                 await _productService.ReturnStockAsync(productId, Math.Abs(difference));
             }
 
-            // recalcula o valor total do pedido
-            order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
-
             // atualiza a qtd
             item.Quantity = dto.Quantity;
+
+            // recalcula o valor total do pedido
+            order.TotalPrice = order.Items.Sum(item => item.UnitPrice * item.Quantity);
 
             await _context.SaveChangesAsync();
             return await GetByIdAsync(id); // devolve o pedido atualizado
