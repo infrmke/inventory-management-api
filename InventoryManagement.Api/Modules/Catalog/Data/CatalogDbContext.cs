@@ -52,18 +52,20 @@ namespace InventoryManagement.Api.Modules.Catalog.Data
                 .Where(e => e.Entity is IAuditableEntity &&
                            (e.State == EntityState.Added || e.State == EntityState.Modified));
 
+            var currentTime = DateTime.UtcNow;
+
             foreach (var entityEntry in entries)
             {
                 var entity = (IAuditableEntity)entityEntry.Entity;
 
                 if (entityEntry.State == EntityState.Added)
                 {
-                    entity.CreatedAt = DateTime.UtcNow;
-                    entity.UpdatedAt = DateTime.UtcNow;
+                    entity.CreatedAt = currentTime;
+                    entity.UpdatedAt = currentTime;
                 }
                 else if (entityEntry.State == EntityState.Modified)
                 {
-                    entity.UpdatedAt = DateTime.UtcNow;
+                    entity.UpdatedAt = currentTime;
                 }
             }
 
