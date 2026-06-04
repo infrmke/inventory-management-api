@@ -63,16 +63,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return new ProductResponseDto(
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.CategoryId,
-                product.CreatedAt,
-                product.UpdatedAt
-            );
+            return await GetByIdAsync(product.Id);
         }
 
         public async Task<ProductResponseDto?> UpdateAsync(Guid id, UpdateProductDto dto)
@@ -89,16 +80,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
 
             await _context.SaveChangesAsync();
 
-            return new ProductResponseDto(
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.CategoryId,
-                product.CreatedAt,
-                product.UpdatedAt
-            );
+            return await GetByIdAsync(product.Id);
         }
 
         public async Task<bool> ReturnStockAsync(Guid id, int quantity)
@@ -143,16 +125,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             product.StockQuantity += dto.Quantity;
             await _context.SaveChangesAsync();
 
-            return new ProductResponseDto(
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.CategoryId,
-                product.CreatedAt,
-                product.UpdatedAt
-            );
+            return await GetByIdAsync(product.Id);
         }
 
         public async Task<ProductResponseDto?> UpdatePriceAsync(Guid id, UpdateProductPriceDto dto)
@@ -165,16 +138,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             product.Price = dto.NewPrice;
             await _context.SaveChangesAsync();
 
-            return new ProductResponseDto(
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.CategoryId,
-                product.CreatedAt,
-                product.UpdatedAt
-            );
+            return await GetByIdAsync(product.Id);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

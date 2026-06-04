@@ -52,13 +52,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            return new CategoryResponseDto(
-                category.Id,
-                category.Name,
-                category.Description,
-                category.CreatedAt,
-                category.UpdatedAt
-            );
+            return await GetByIdAsync(category.Id);
         }
 
         public async Task<CategoryResponseDto?> UpdateAsync(Guid id, UpdateCategoryDto dto)
@@ -72,13 +66,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
 
             await _context.SaveChangesAsync();
 
-            return new CategoryResponseDto(
-                category.Id,
-                category.Name,
-                category.Description,
-                category.CreatedAt,
-                category.UpdatedAt
-            );
+            return await GetByIdAsync(category.Id);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

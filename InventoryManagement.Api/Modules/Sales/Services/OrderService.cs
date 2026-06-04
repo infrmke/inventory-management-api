@@ -238,24 +238,7 @@ namespace InventoryManagement.Api.Modules.Sales.Services
                 await _productService.ReturnStockAsync(item.ProductId, item.Quantity);
             }
 
-            var itemsDto = order.Items.Select(item =>
-                new OrderItemResponseDto(
-                    item.Id,
-                    item.OrderId,
-                    item.ProductId,
-                    item.Quantity,
-                    item.UnitPrice
-                )
-            ).ToList();
-
-            return new OrderResponseDto(
-                order.Id,
-                order.TotalPrice,
-                order.Status,
-                itemsDto,
-                order.CreatedAt,
-                order.UpdatedAt
-            );
+            return await GetByIdAsync(order.Id);
         }
     }
 }
