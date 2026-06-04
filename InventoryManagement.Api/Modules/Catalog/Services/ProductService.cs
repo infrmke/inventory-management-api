@@ -1,6 +1,7 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Data;
 using InventoryManagement.Api.Modules.Catalog.DTOs;
 using InventoryManagement.Api.Modules.Catalog.Models;
+using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Catalog.Services
@@ -34,7 +35,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null) return null;
+            if (product == null) throw new NotFoundException("Product not found");
 
             return new ProductResponseDto(
                 product.Id,
@@ -78,7 +79,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null) return null;
+            if (product == null) throw new NotFoundException("Product not found");
 
             product.Name = dto.Name;
             product.Description = dto.Description;
@@ -99,12 +100,12 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
                 product.UpdatedAt
             );
         }
-        
+
         public async Task<bool> ReturnStockAsync(Guid id, int quantity)
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null) return false;
+            if (product == null) throw new NotFoundException("Product not found");
 
             // devolve a qtd de estoque ao produto e salva
             product.StockQuantity += quantity;
@@ -117,7 +118,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null) return false;
+            if (product == null) throw new NotFoundException("Product not found");
 
             // verifica se há estoque
             if (product.StockQuantity < quantity) return false;
@@ -133,10 +134,10 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null) return null;
+            if (product == null) throw new NotFoundException("Product not found");
 
             // se o ajuste for negativo, garante que o estoque não vá abaixo de zero
-            if (product.StockQuantity + dto.Quantity < 0) return null;
+            if (product.StockQuantity + dto.Quantity < 0) throw new BadRequestException("Invalid stock quantity");
 
             // aplica o ajuste e salva
             product.StockQuantity += dto.Quantity;
@@ -158,7 +159,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null) return null;
+            if (product == null) throw new NotFoundException("Product not found");
 
             // ajusta o preço e salva
             product.Price = dto.NewPrice;
@@ -180,7 +181,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null) return false;
+            if (product == null) throw new NotFoundException("Product not found");
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();

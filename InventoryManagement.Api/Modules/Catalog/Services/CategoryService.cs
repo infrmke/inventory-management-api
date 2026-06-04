@@ -1,6 +1,7 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Data;
 using InventoryManagement.Api.Modules.Catalog.DTOs;
 using InventoryManagement.Api.Modules.Catalog.Models;
+using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Catalog.Services
@@ -18,12 +19,12 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var categories = await _context.Categories.AsNoTracking().ToListAsync();
 
-            return categories.Select(category => 
+            return categories.Select(category =>
                 new CategoryResponseDto(
-                    category.Id, 
-                    category.Name, 
-                    category.Description, 
-                    category.CreatedAt, 
+                    category.Id,
+                    category.Name,
+                    category.Description,
+                    category.CreatedAt,
                     category.UpdatedAt
                 )
             );
@@ -33,7 +34,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var category = await _context.Categories.FindAsync(id);
 
-            if (category == null) return null;
+            if (category == null) throw new NotFoundException("Category not found");
 
             return new CategoryResponseDto(
                 category.Id,
@@ -52,8 +53,8 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
             await _context.SaveChangesAsync();
 
             return new CategoryResponseDto(
-                category.Id, 
-                category.Name, 
+                category.Id,
+                category.Name,
                 category.Description,
                 category.CreatedAt,
                 category.UpdatedAt
@@ -64,7 +65,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         {
             var category = await _context.Categories.FindAsync(id);
 
-            if (category == null) return null;
+            if (category == null) throw new NotFoundException("Category not found");
 
             category.Name = dto.Name;
             category.Description = dto.Description;
@@ -83,8 +84,8 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         public async Task<bool> DeleteAsync(Guid id)
         {
             var category = await _context.Categories.FindAsync(id);
-            
-            if (category == null) return false;
+
+            if (category == null) throw new NotFoundException("Category not found");
 
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
