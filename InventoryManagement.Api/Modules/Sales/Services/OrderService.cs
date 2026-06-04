@@ -140,13 +140,15 @@ namespace InventoryManagement.Api.Modules.Sales.Services
                 existingItem.Quantity += dto.Quantity;
             }
             else
-            {   
+            {
                 // caso não, adiciona o item ao pedido
+                var product = order.Items.FirstOrDefault(item => item.ProductId == dto.ProductId);
+
                 order.Items.Add(new OrderItem
                 {
                     ProductId = dto.ProductId,
                     Quantity = dto.Quantity,
-                    UnitPrice = dto.UnitPrice
+                    UnitPrice = product.UnitPrice
                 });
             }
 
