@@ -3,6 +3,7 @@ using InventoryManagement.Api.Modules.Catalog.Services;
 using InventoryManagement.Api.Modules.Sales.Data;
 using InventoryManagement.Api.Modules.Sales.DTOs;
 using InventoryManagement.Api.Modules.Sales.Models;
+using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Sales.Services
@@ -54,7 +55,7 @@ namespace InventoryManagement.Api.Modules.Sales.Services
                 .Include(order => order.Items)
                 .FirstOrDefaultAsync(order => order.Id == id);
 
-            if (order == null) return null;
+            if (order == null) throw new NotFoundException("Order not found");
 
             var itemsDto = order.Items.Select(item =>
                 new OrderItemResponseDto(
@@ -83,10 +84,10 @@ namespace InventoryManagement.Api.Modules.Sales.Services
             {
                 var product = await _productService.GetByIdAsync(itemDto.ProductId);
 
-                if (product == null) return null;
+                if (product == null) throw new NotFoundException($"Product with ID {itemDto.ProductId} not found");
 
                 // simula se o estoque suporta a compra
-                if (product.StockQuantity < itemDto.Quantity) return null;
+                if (product.StockQuantity < itemDto.Quantity) throw new BadRequestException($"Stock quantity of {itemDto.Quantity} not available for {product.Name}");
             }
 
             // instancia cada item
@@ -124,12 +125,13 @@ namespace InventoryManagement.Api.Modules.Sales.Services
         {
             var order = await _context.Orders.Include(order => order.Items).FirstOrDefaultAsync(order => order.Id == id);
 
-            if (order == null || order.Status == OrderStatus.Cancelled) return null;
+            if (order == null) throw new NotFoundException("Order not found");
+            if (order.Status == OrderStatus.Cancelled) throw new BadRequestException("Order is not active");
 
             // verifica se há estoque disponível para a qtd do item
             var stockDeducted = await _productService.DeductStockAsync(dto.ProductId, dto.Quantity);
 
-            if (!stockDeducted) return null;
+            if (!stockDeducted) throw new BadRequestException($"Stock quantity of {dto.Quantity} not available");
 
             // verifica se o item já existe no pedido
             var existingItem = order.Items.FirstOrDefault(item => item.ProductId == dto.ProductId);
@@ -163,11 +165,12 @@ namespace InventoryManagement.Api.Modules.Sales.Services
         {
             var order = await _context.Orders.Include(order => order.Items).FirstOrDefaultAsync(order => order.Id == id);
 
-            if (order == null || order.Status == OrderStatus.Cancelled) return null;
+            if (order == null) throw new NotFoundException("Order not found");
+            if (order.Status == OrderStatus.Cancelled) throw new BadRequestException("Order is not active");
 
             var item = order.Items.FirstOrDefault(item => item.ProductId == productId);
 
-            if (item == null) return null;
+            if (item == null) throw new NotFoundException("Product not found");
 
             // lógica de estoque abaixo
             int difference = dto.Quantity - item.Quantity;
@@ -177,7 +180,7 @@ namespace InventoryManagement.Api.Modules.Sales.Services
                 // deduz a diferença do estoque se a diff for maior
                 var stockDeducted = await _productService.DeductStockAsync(productId, difference);
 
-                if (!stockDeducted) return null;
+                if (!stockDeducted) throw new BadRequestException($"Stock quantity of {dto.Quantity} not available");
             }
             else if (difference < 0)
             {
@@ -199,11 +202,12 @@ namespace InventoryManagement.Api.Modules.Sales.Services
         {
             var order = await _context.Orders.Include(order => order.Items).FirstOrDefaultAsync(order => order.Id == id);
 
-            if (order == null || order.Status == OrderStatus.Cancelled) return null;
+            if (order == null) throw new NotFoundException("Order not found");
+            if (order.Status == OrderStatus.Cancelled) throw new BadRequestException("Order is not active");
 
             var item = order.Items.FirstOrDefault(item => item.ProductId == productId);
             
-            if (item == null) return null;
+            if (item == null) throw new NotFoundException("Product not found");
 
             // remove o item e devolve a qtd ao estoque
             order.Items.Remove(item);
@@ -221,10 +225,8 @@ namespace InventoryManagement.Api.Modules.Sales.Services
         {
             var order = await _context.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == id);
 
-            if (order == null) return null;
-
-            // não faz nada se o pedido já estiver cancelado
-            if (order.Status == OrderStatus.Cancelled) return null;
+            if (order == null) throw new NotFoundException("Order not found");
+            if (order.Status == OrderStatus.Cancelled) throw new BadRequestException("Order is already inactive");
 
             // altera o status e salva
             order.Status = OrderStatus.Cancelled;

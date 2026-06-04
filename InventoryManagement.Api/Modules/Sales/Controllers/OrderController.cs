@@ -26,9 +26,6 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var orders = await _orderService.GetByIdAsync(id);
-
-            if (orders == null) return NotFound(new { error = "Order not found" });
-
             return Ok(orders);
         }
 
@@ -43,9 +40,6 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
         public async Task<IActionResult> AddItem(Guid id, [FromBody] AddOrderItemDto dto)
         {
             var updatedOrder = await _orderService.AddItemAsync(id, dto);
-
-            if (updatedOrder == null) return NotFound(new { error = "Order not found or is inactive" });
-
             return Ok(updatedOrder);
         }
 
@@ -53,9 +47,6 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
         public async Task<IActionResult> UpdateItemQuantity(Guid id, Guid productId, [FromBody] UpdateOrderItemQuantityDto dto)
         {
             var updatedOrder = await _orderService.UpdateItemQuantityAsync(id, productId, dto);
-
-            if (updatedOrder == null) return NotFound(new { error = "Order or product not found, or order is inactive" });
-            
             return Ok(updatedOrder);
         }
 
@@ -63,9 +54,6 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
         public async Task<IActionResult> RemoveItem(Guid id, Guid productId)
         {
             var updatedOrder = await _orderService.RemoveItemAsync(id, productId);
-
-            if (updatedOrder == null) return NotFound(new { error = "Order or product not found, or order is inactive" });
-            
             return Ok(updatedOrder);
         }
 
@@ -73,9 +61,6 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
         public async Task<IActionResult> Cancel(Guid id)
         {
             var cancelled = await _orderService.CancelAsync(id);
-
-            if (cancelled == null) return NotFound(new { error = "Order not found OR cannot be cancelled" });
-
             return Ok(cancelled);
         }
     }

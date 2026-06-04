@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Api.Modules.Sales.Data;
 using InventoryManagement.Api.Modules.Sales.DTOs;
+using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Sales.Services
@@ -31,7 +32,7 @@ namespace InventoryManagement.Api.Modules.Sales.Services
         {
             var orderItem = await _context.OrderItems.FindAsync(id);
 
-            if (orderItem == null) return null;
+            if (orderItem == null) throw new NotFoundException("Item not found");
 
             return new OrderItemResponseDto(
                 orderItem.Id,

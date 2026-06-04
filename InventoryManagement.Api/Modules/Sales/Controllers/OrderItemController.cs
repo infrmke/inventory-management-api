@@ -25,9 +25,6 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var orderItem = await _orderItemService.GetByIdAsync(id);
-
-            if (orderItem == null) return NotFound(new {error = "Item not found"});
-
             return Ok(orderItem);
         }
     }
