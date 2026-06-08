@@ -4,7 +4,7 @@ using InventoryManagement.Api.Modules.Catalog.Models;
 using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryManagement.Api.Modules.Catalog.Services
+namespace InventoryManagement.Api.Modules.Catalog.Services.Category
 {
     public class CategoryService : ICategoryService
     {

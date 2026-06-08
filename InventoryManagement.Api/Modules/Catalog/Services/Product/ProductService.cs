@@ -1,10 +1,11 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Data;
 using InventoryManagement.Api.Modules.Catalog.DTOs;
+using InventoryManagement.Api.Modules.Catalog.DTOs.Product;
 using InventoryManagement.Api.Modules.Catalog.Models;
 using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryManagement.Api.Modules.Catalog.Services
+namespace InventoryManagement.Api.Modules.Catalog.Services.Product
 {
     public class ProductService : IProductService
     {
@@ -46,6 +47,32 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
                 product.CategoryId,
                 product.CreatedAt,
                 product.UpdatedAt
+            );
+        }
+
+        public async Task<IEnumerable<ProductResponseDto>> GetByCategoryIdAsync(Guid categoryId)
+        {
+            // verifica se a categoria existe
+            var categoryExists = await _context.Categories.AnyAsync(category => category.Id == categoryId);
+
+            if (!categoryExists)
+                throw new NotFoundException($"Category with ID {categoryId} not found");
+
+            var products = await _context.Products
+                .Where(product => product.CategoryId == categoryId)
+                .ToListAsync();
+
+            return products.Select(product => 
+                new ProductResponseDto(
+                    product.Id, 
+                    product.Name, 
+                    product.Description, 
+                    product.Price, 
+                    product.StockQuantity, 
+                    product.CategoryId, 
+                    product.CreatedAt, 
+                    product.UpdatedAt
+                )
             );
         }
 

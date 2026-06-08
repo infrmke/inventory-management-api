@@ -1,6 +1,6 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.DTOs;
 
-namespace InventoryManagement.Api.Modules.Catalog.Services
+namespace InventoryManagement.Api.Modules.Catalog.Services.Category
 {
     public interface ICategoryService
     {

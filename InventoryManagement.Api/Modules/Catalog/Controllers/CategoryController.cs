@@ -1,5 +1,5 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.DTOs;
-using InventoryManagement.Api.Modules.Catalog.Services;
+using InventoryManagement.Api.Modules.Catalog.Services.Category;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Api.Modules.Catalog.Controllers

@@ -1,6 +1,7 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.DTOs;
+using InventoryManagement.Api.Modules.Catalog.DTOs.Product;
 
-namespace InventoryManagement.Api.Modules.Catalog.Services
+namespace InventoryManagement.Api.Modules.Catalog.Services.Product
 {
     public interface IProductService
     {
@@ -12,6 +13,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services
         Task<bool> DeleteAsync(Guid id);
 
         // TASK-BASED:
+        Task<IEnumerable<ProductResponseDto>> GetByCategoryIdAsync(Guid categoryId);
         Task<bool> ReturnStockAsync(Guid id, int quantity);
         Task<bool> DeductStockAsync(Guid id, int quantity);
         Task<ProductResponseDto?> AdjustStockManuallyAsync(Guid id, AdjustProductStockDto dto);

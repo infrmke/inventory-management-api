@@ -1,5 +1,6 @@
 using InventoryManagement.Api.Modules.Catalog.Data;
-using InventoryManagement.Api.Modules.Catalog.Services;
+using InventoryManagement.Api.Modules.Catalog.Services.Category;
+using InventoryManagement.Api.Modules.Catalog.Services.Product;
 using InventoryManagement.Api.Modules.Sales.Data;
 using InventoryManagement.Api.Modules.Sales.Services;
 using InventoryManagement.Api.Shared.Exceptions;

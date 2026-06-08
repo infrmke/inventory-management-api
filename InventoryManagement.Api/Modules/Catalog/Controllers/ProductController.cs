@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.DTOs;
-using InventoryManagement.Api.Modules.Catalog.Services;
+using InventoryManagement.Api.Modules.Catalog.DTOs.Product;
+using InventoryManagement.Api.Modules.Catalog.Services.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Api.Modules.Catalog.Controllers
@@ -27,6 +28,13 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
         {
             var product = await _productService.GetByIdAsync(id);
             return Ok(product);
+        }
+
+        [HttpGet("category/{categoryId:Guid}")]
+        public async Task<IActionResult> GetByCategory(Guid categoryId)
+        {
+            var products = await _productService.GetByCategoryIdAsync(categoryId);
+            return Ok(products);
         }
 
         [HttpPost]
