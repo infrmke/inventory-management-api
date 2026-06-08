@@ -1,9 +1,9 @@
 ﻿using InventoryManagement.Api.Modules.Sales.Data;
-using InventoryManagement.Api.Modules.Sales.DTOs;
+using InventoryManagement.Api.Modules.Sales.DTOs.OrderItem;
 using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryManagement.Api.Modules.Sales.Services
+namespace InventoryManagement.Api.Modules.Sales.Services.OrderItem
 {
     public class OrderItemService : IOrderItemService
     {

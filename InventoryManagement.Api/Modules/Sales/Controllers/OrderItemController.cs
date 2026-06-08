@@ -1,4 +1,4 @@
-﻿using InventoryManagement.Api.Modules.Sales.Services;
+﻿using InventoryManagement.Api.Modules.Sales.Services.OrderItem;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Api.Modules.Sales.Controllers

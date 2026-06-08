@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Api.Modules.Sales.DTOs;
+﻿using InventoryManagement.Api.Modules.Sales.DTOs.Order;
+using InventoryManagement.Api.Modules.Sales.DTOs.OrderItem;
 using InventoryManagement.Api.Modules.Sales.Services;
 using Microsoft.AspNetCore.Mvc;
 
