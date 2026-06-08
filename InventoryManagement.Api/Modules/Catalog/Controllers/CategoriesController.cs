@@ -6,11 +6,11 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
 {
     [ApiController]
     [Route("api/catalog/categories")]
-    public class CategoryController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
