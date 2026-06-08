@@ -3,7 +3,6 @@ using InventoryManagement.Api.Modules.Catalog.Services.Category;
 using InventoryManagement.Api.Modules.Catalog.Services.Product;
 using InventoryManagement.Api.Modules.Sales.Data;
 using InventoryManagement.Api.Modules.Sales.Services;
-using InventoryManagement.Api.Modules.Sales.Services.OrderItem;
 using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +25,6 @@ builder.Services.AddDbContext<SalesDbContext>(options => options.UseSqlServer(bu
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
-builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddProblemDetails();
