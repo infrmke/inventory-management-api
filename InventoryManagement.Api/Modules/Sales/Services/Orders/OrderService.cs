@@ -1,13 +1,12 @@
-﻿using InventoryManagement.Api.Modules.Catalog.Models;
-using InventoryManagement.Api.Modules.Catalog.Services.Product;
+﻿using InventoryManagement.Api.Modules.Catalog.Services.Products;
 using InventoryManagement.Api.Modules.Sales.Data;
-using InventoryManagement.Api.Modules.Sales.DTOs.Order;
-using InventoryManagement.Api.Modules.Sales.DTOs.OrderItem;
-using InventoryManagement.Api.Modules.Sales.Models;
+using InventoryManagement.Api.Modules.Sales.DTOs.OrderItems;
+using InventoryManagement.Api.Modules.Sales.DTOs.Orders;
+using InventoryManagement.Api.Modules.Sales.Entities;
 using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryManagement.Api.Modules.Sales.Services
+namespace InventoryManagement.Api.Modules.Sales.Services.Orders
 {
     public class OrderService : IOrderService
     {

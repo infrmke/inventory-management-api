@@ -1,7 +1,7 @@
-﻿using InventoryManagement.Api.Modules.Sales.DTOs.OrderItem;
-using InventoryManagement.Api.Modules.Sales.Models;
+﻿using InventoryManagement.Api.Modules.Sales.DTOs.OrderItems;
+using InventoryManagement.Api.Modules.Sales.Entities;
 
-namespace InventoryManagement.Api.Modules.Sales.DTOs.Order
+namespace InventoryManagement.Api.Modules.Sales.DTOs.Orders
 {
     public record OrderResponseDto(
         Guid Id,

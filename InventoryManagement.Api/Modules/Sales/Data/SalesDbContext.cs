@@ -1,4 +1,4 @@
-﻿using InventoryManagement.Api.Modules.Sales.Models;
+﻿using InventoryManagement.Api.Modules.Sales.Entities;
 using InventoryManagement.Api.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

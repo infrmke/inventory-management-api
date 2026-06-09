@@ -1,7 +1,7 @@
-﻿using InventoryManagement.Api.Modules.Sales.DTOs.Order;
-using InventoryManagement.Api.Modules.Sales.DTOs.OrderItem;
+﻿using InventoryManagement.Api.Modules.Sales.DTOs.Orders;
+using InventoryManagement.Api.Modules.Sales.DTOs.OrderItems;
 
-namespace InventoryManagement.Api.Modules.Sales.Services
+namespace InventoryManagement.Api.Modules.Sales.Services.Orders
 {
     public interface IOrderService
     {

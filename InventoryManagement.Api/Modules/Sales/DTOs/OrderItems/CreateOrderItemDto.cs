@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Sales.DTOs.OrderItem
+namespace InventoryManagement.Api.Modules.Sales.DTOs.OrderItems
 {
-    public record AddOrderItemDto(
+    public record CreateOrderItemDto(
         [Required(ErrorMessage = "Product ID is required")]
         Guid ProductId,
 

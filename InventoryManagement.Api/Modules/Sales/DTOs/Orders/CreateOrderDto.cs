@@ -1,7 +1,7 @@
-﻿using InventoryManagement.Api.Modules.Sales.DTOs.OrderItem;
+﻿using InventoryManagement.Api.Modules.Sales.DTOs.OrderItems;
 using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Sales.DTOs.Order
+namespace InventoryManagement.Api.Modules.Sales.DTOs.Orders
 {
     public record CreateOrderDto(
         [Required(ErrorMessage = "The order cannot be empty")]

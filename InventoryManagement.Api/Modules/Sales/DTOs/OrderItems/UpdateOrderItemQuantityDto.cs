@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Sales.DTOs.OrderItem
+namespace InventoryManagement.Api.Modules.Sales.DTOs.OrderItems
 {
     public record UpdateOrderItemQuantityDto(
         [Required(ErrorMessage = "Quantity is required")]

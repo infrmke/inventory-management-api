@@ -1,4 +1,4 @@
-﻿namespace InventoryManagement.Api.Modules.Sales.Models
+﻿namespace InventoryManagement.Api.Modules.Sales.Entities
 {
     public enum OrderStatus
     {
