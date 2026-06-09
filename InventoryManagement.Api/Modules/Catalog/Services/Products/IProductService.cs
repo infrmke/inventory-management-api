@@ -1,7 +1,6 @@
-﻿using InventoryManagement.Api.Modules.Catalog.DTOs;
-using InventoryManagement.Api.Modules.Catalog.DTOs.Product;
+﻿using InventoryManagement.Api.Modules.Catalog.DTOs.Products;
 
-namespace InventoryManagement.Api.Modules.Catalog.Services.Product
+namespace InventoryManagement.Api.Modules.Catalog.Services.Products
 {
     public interface IProductService
     {

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Catalog.DTOs
+namespace InventoryManagement.Api.Modules.Catalog.DTOs.Categories
 {
-    public record CreateCategoryDto(
+    public record UpdateCategoryDto(
         [Required(ErrorMessage = "Name is required")]
         [MaxLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
         string Name,

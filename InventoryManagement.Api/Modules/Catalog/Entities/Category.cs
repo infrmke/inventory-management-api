@@ -1,7 +1,7 @@
 ﻿using InventoryManagement.Api.Shared.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Catalog.Models
+namespace InventoryManagement.Api.Modules.Catalog.Entities
 {
     public class Category : IAuditableEntity
     {

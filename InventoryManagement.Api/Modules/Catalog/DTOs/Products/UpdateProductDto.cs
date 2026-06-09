@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Catalog.DTOs
+namespace InventoryManagement.Api.Modules.Catalog.DTOs.Products
 {
-    public record CreateProductDto(
+    public record UpdateProductDto(
         [Required(ErrorMessage = "Name is required")]
         [MaxLength(150, ErrorMessage = "Name cannot exceed 150 characters")]
         string Name,
@@ -10,11 +10,11 @@ namespace InventoryManagement.Api.Modules.Catalog.DTOs
         [MaxLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
         string? Description,
 
-        [Required(ErrorMessage = "Price cannot be empty")]
+        [Required(ErrorMessage = "Price is required")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than zero")]
         decimal Price,
 
-        [Required(ErrorMessage = "Stock cannot be empty")]
+        [Required(ErrorMessage = "Stock is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Stock cannot be lower than zero")]
         int StockQuantity,
 

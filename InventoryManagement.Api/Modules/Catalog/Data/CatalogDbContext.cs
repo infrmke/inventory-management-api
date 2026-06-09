@@ -1,4 +1,4 @@
-﻿using InventoryManagement.Api.Modules.Catalog.Models;
+﻿using InventoryManagement.Api.Modules.Catalog.Entities;
 using InventoryManagement.Api.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

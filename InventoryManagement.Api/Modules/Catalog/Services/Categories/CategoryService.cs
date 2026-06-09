@@ -1,10 +1,10 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Data;
-using InventoryManagement.Api.Modules.Catalog.DTOs;
-using InventoryManagement.Api.Modules.Catalog.Models;
+using InventoryManagement.Api.Modules.Catalog.DTOs.Categories;
+using InventoryManagement.Api.Modules.Catalog.Entities;
 using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryManagement.Api.Modules.Catalog.Services.Category
+namespace InventoryManagement.Api.Modules.Catalog.Services.Categories
 {
     public class CategoryService : ICategoryService
     {
