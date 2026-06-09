@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.DTOs.Categories;
 using InventoryManagement.Api.Modules.Catalog.Services.Categories;
+using InventoryManagement.Api.Shared.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Api.Modules.Catalog.Controllers
@@ -22,10 +23,11 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> GetById(string id)
         {
-            var category = await _categoryService.GetByIdAsync(id);
+            var category = await _categoryService.GetByIdAsync(Guid.Parse(id));
             return Ok(category);
         }
 
@@ -36,17 +38,19 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
-        [HttpPut("{id:Guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryDto dto)
+        [HttpPut("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateCategoryDto dto)
         {
-            var updated = await _categoryService.UpdateAsync(id, dto);
+            var updated = await _categoryService.UpdateAsync(Guid.Parse(id), dto);
             return Ok(updated);
         }
 
-        [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> Delete(string id)
         {
-            var deleted = await _categoryService.DeleteAsync(id);
+            var deleted = await _categoryService.DeleteAsync(Guid.Parse(id));
             return NoContent();
         }
     }

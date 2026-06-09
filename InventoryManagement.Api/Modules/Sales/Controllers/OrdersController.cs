@@ -2,6 +2,7 @@
 using InventoryManagement.Api.Modules.Sales.DTOs.OrderItems;
 using Microsoft.AspNetCore.Mvc;
 using InventoryManagement.Api.Modules.Sales.Services.Orders;
+using InventoryManagement.Api.Shared.Filters;
 
 namespace InventoryManagement.Api.Modules.Sales.Controllers
 {
@@ -23,10 +24,11 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
             return Ok(orders);
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> GetById(string id)
         {
-            var orders = await _orderService.GetByIdAsync(id);
+            var orders = await _orderService.GetByIdAsync(Guid.Parse(id));
             return Ok(orders);
         }
 
@@ -37,31 +39,45 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
-        [HttpPatch("{id:Guid}/items")]
-        public async Task<IActionResult> AddItem(Guid id, [FromBody] AddOrderItemDto dto)
+        [HttpPatch("{id}/items")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> AddItem(string id, [FromBody] AddOrderItemDto dto)
         {
-            var updatedOrder = await _orderService.AddItemAsync(id, dto);
+            var updatedOrder = await _orderService.AddItemAsync(Guid.Parse(id), dto);
             return Ok(updatedOrder);
         }
 
-        [HttpPatch("{id:Guid}/items/{productId:Guid}")]
-        public async Task<IActionResult> UpdateItemQuantity(Guid id, Guid productId, [FromBody] UpdateOrderItemQuantityDto dto)
+        [HttpPatch("{id}/items/{productId}")]
+        [ValidateGuid("id")]
+        [ValidateGuid("productId")]
+        public async Task<IActionResult> UpdateItemQuantity(string id, string productId, [FromBody] UpdateOrderItemQuantityDto dto)
         {
-            var updatedOrder = await _orderService.UpdateItemQuantityAsync(id, productId, dto);
+            var orderGuid = Guid.Parse(id);
+            var productGuid = Guid.Parse(productId);
+
+            var updatedOrder = await _orderService.UpdateItemQuantityAsync(orderGuid, productGuid, dto);
+
             return Ok(updatedOrder);
         }
 
-        [HttpDelete("{id:Guid}/items/{productId:Guid}")]
-        public async Task<IActionResult> RemoveItem(Guid id, Guid productId)
+        [HttpDelete("{id}/items/{productId}")]
+        [ValidateGuid("id")]
+        [ValidateGuid("productId")]
+        public async Task<IActionResult> RemoveItem(string id, string productId)
         {
-            var updatedOrder = await _orderService.RemoveItemAsync(id, productId);
+            var orderGuid = Guid.Parse(id);
+            var productGuid = Guid.Parse(productId);
+
+            var updatedOrder = await _orderService.RemoveItemAsync(orderGuid, productGuid);
+
             return Ok(updatedOrder);
         }
 
-        [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> Cancel(Guid id)
+        [HttpDelete("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> Cancel(string id)
         {
-            var cancelled = await _orderService.CancelAsync(id);
+            var cancelled = await _orderService.CancelAsync(Guid.Parse(id));
             return Ok(cancelled);
         }
     }

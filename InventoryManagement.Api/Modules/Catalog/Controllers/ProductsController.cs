@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.DTOs.Products;
 using InventoryManagement.Api.Modules.Catalog.Services.Products;
+using InventoryManagement.Api.Shared.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Api.Modules.Catalog.Controllers
@@ -22,17 +23,19 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> GetById(string id)
         {
-            var product = await _productService.GetByIdAsync(id);
+            var product = await _productService.GetByIdAsync(Guid.Parse(id));
             return Ok(product);
         }
 
-        [HttpGet("category/{categoryId:Guid}")]
-        public async Task<IActionResult> GetByCategory(Guid categoryId)
+        [HttpGet("category/{categoryId}")]
+        [ValidateGuid("categoryId")]
+        public async Task<IActionResult> GetByCategory(string categoryId)
         {
-            var products = await _productService.GetByCategoryIdAsync(categoryId);
+            var products = await _productService.GetByCategoryIdAsync(Guid.Parse(categoryId));
             return Ok(products);
         }
 
@@ -43,31 +46,35 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
-        [HttpPut("{id:Guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductDto dto)
+        [HttpPut("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateProductDto dto)
         {
-            var updated = await _productService.UpdateAsync(id, dto);
+            var updated = await _productService.UpdateAsync(Guid.Parse(id), dto);
             return Ok(updated);
         }
 
-        [HttpPatch("{id:Guid}/adjust-stock")]
-        public async Task<IActionResult> AdjustStock(Guid id, [FromBody] AdjustProductStockDto dto)
+        [HttpPatch("{id}/adjust-stock")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> AdjustStock(string id, [FromBody] AdjustProductStockDto dto)
         {
-            var updatedProduct = await _productService.AdjustStockManuallyAsync(id, dto);
+            var updatedProduct = await _productService.AdjustStockManuallyAsync(Guid.Parse(id), dto);
             return Ok(updatedProduct);
         }
 
-        [HttpPatch("{id:Guid}/update-price")]
-        public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] UpdateProductPriceDto dto)
+        [HttpPatch("{id}/update-price")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> UpdatePrice(string id, [FromBody] UpdateProductPriceDto dto)
         {
-            var updatedProduct = await _productService.UpdatePriceAsync(id, dto);
+            var updatedProduct = await _productService.UpdatePriceAsync(Guid.Parse(id), dto);
             return Ok(updatedProduct);
         }
 
-        [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{id}")]
+        [ValidateGuid("id")]
+        public async Task<IActionResult> Delete(string id)
         {
-            var deleted = await _productService.DeleteAsync(id);
+            var deleted = await _productService.DeleteAsync(Guid.Parse(id));
             return NoContent();
         }
     }
