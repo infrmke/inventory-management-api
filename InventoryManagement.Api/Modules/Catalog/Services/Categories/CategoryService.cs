@@ -2,6 +2,7 @@
 using InventoryManagement.Api.Modules.Catalog.DTOs.Categories;
 using InventoryManagement.Api.Modules.Catalog.Entities;
 using InventoryManagement.Api.Shared.Exceptions;
+using InventoryManagement.Api.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Catalog.Services.Categories
@@ -15,18 +16,55 @@ namespace InventoryManagement.Api.Modules.Catalog.Services.Categories
             _context = context;
         }
 
-        public async Task<IEnumerable<CategoryResponseDto>> GetAllAsync()
+        public async Task<PagedResult<CategoryResponseDto>> GetPagedAsync(CategoryPageParams @params)
         {
-            var categories = await _context.Categories.AsNoTracking().ToListAsync();
+            // inicia o IQueryable
+            var query = _context.Categories.AsNoTracking();
 
-            return categories.Select(category =>
-                new CategoryResponseDto(
-                    category.Id,
-                    category.Name,
-                    category.Description,
-                    category.CreatedAt,
-                    category.UpdatedAt
+            // aplica o filtro de busca se o campo Search foi preenchido
+            if (!string.IsNullOrWhiteSpace(@params.Search))
+            {
+                query = query.Where(category => category.Name.Contains(@params.Search));
+            }
+
+            // ordenação dinâmica com padrão "name,asc"
+            var sortParts = @params.Sort?.Split(',') ?? ["name", "asc"];
+            var property = sortParts[0].ToLower();
+            var direction = sortParts.Length > 1 ? sortParts[1].ToLower() : "asc";
+
+
+            // aplicando a direção (asc / desc) correta
+            query = property switch
+            {
+                "id" => direction == "desc" ? query.OrderByDescending(category => category.Id) : query.OrderBy(category => category.Id),
+
+                "name" => direction == "desc" ? query.OrderByDescending(category => category.Name) : query.OrderBy(category => category.Name),
+
+                _ => direction == "desc" ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name)
+            };
+
+            var totalElements = await query.CountAsync(); // total de elementos que passaram pelo filtro
+            var skip = @params.Page * @params.Size; // quantos registros pular
+
+            var categories = await query
+                .Skip(skip)
+                .Take(@params.Size)
+                .Select(category => 
+                    new CategoryResponseDto(
+                        category.Id, 
+                        category.Name, 
+                        category.Description, 
+                        category.CreatedAt, 
+                        category.UpdatedAt
+                    )
                 )
+                .ToListAsync();
+
+            return new PagedResult<CategoryResponseDto>(
+                categories, 
+                @params.Page, 
+                @params.Size, 
+                totalElements
             );
         }
 
