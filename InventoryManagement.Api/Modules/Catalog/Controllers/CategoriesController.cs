@@ -1,4 +1,4 @@
-﻿using InventoryManagement.Api.Modules.Catalog.DTOs.Categories;
+﻿using InventoryManagement.Api.Modules.Catalog.Dtos.Categories;
 using InventoryManagement.Api.Modules.Catalog.Services.Categories;
 using InventoryManagement.Api.Shared.Filters;
 using Microsoft.AspNetCore.Mvc;

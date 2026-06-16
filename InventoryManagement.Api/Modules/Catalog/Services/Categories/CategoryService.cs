@@ -1,5 +1,5 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Data;
-using InventoryManagement.Api.Modules.Catalog.DTOs.Categories;
+using InventoryManagement.Api.Modules.Catalog.Dtos.Categories;
 using InventoryManagement.Api.Modules.Catalog.Entities;
 using InventoryManagement.Api.Shared.Exceptions;
 using InventoryManagement.Api.Shared.Pagination;

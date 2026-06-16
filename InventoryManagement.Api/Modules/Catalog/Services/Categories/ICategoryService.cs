@@ -1,4 +1,4 @@
-﻿using InventoryManagement.Api.Modules.Catalog.DTOs.Categories;
+﻿using InventoryManagement.Api.Modules.Catalog.Dtos.Categories;
 using InventoryManagement.Api.Shared.Pagination;
 
 namespace InventoryManagement.Api.Modules.Catalog.Services.Categories

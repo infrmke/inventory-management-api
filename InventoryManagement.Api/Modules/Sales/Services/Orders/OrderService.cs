@@ -1,7 +1,7 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Services.Products;
 using InventoryManagement.Api.Modules.Sales.Data;
-using InventoryManagement.Api.Modules.Sales.DTOs.OrderItems;
-using InventoryManagement.Api.Modules.Sales.DTOs.Orders;
+using InventoryManagement.Api.Modules.Sales.Dtos.OrderItems;
+using InventoryManagement.Api.Modules.Sales.Dtos.Orders;
 using InventoryManagement.Api.Modules.Sales.Entities;
 using InventoryManagement.Api.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-﻿namespace InventoryManagement.Api.Modules.Sales.DTOs.OrderItems
+﻿namespace InventoryManagement.Api.Modules.Sales.Dtos.OrderItems
 {
     public record OrderItemResponseDto(
         Guid Id,

@@ -1,6 +1,6 @@
 ﻿using InventoryManagement.Api.Shared.Pagination.Dtos;
 
-namespace InventoryManagement.Api.Modules.Catalog.DTOs.Categories
+namespace InventoryManagement.Api.Modules.Catalog.Dtos.Categories
 {
     public record CategoryPageParams(
         string? Search,

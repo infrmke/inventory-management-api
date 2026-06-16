@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Catalog.DTOs.Products
+namespace InventoryManagement.Api.Modules.Catalog.Dtos.Products
 {
     public record UpdateProductPriceDto(
         [Required(ErrorMessage = "Price is required")]

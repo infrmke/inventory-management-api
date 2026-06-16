@@ -1,6 +1,6 @@
 ﻿using InventoryManagement.Api.Shared.Pagination.Dtos;
 
-namespace InventoryManagement.Api.Modules.Catalog.DTOs.Products
+namespace InventoryManagement.Api.Modules.Catalog.Dtos.Products
 {
     public record ProductPageParams(
         string? Search,

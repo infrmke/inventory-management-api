@@ -1,5 +1,5 @@
-﻿using InventoryManagement.Api.Modules.Sales.DTOs.Orders;
-using InventoryManagement.Api.Modules.Sales.DTOs.OrderItems;
+﻿using InventoryManagement.Api.Modules.Sales.Dtos.Orders;
+using InventoryManagement.Api.Modules.Sales.Dtos.OrderItems;
 
 namespace InventoryManagement.Api.Modules.Sales.Services.Orders
 {

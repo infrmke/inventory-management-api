@@ -1,4 +1,4 @@
-﻿namespace InventoryManagement.Api.Modules.Catalog.DTOs.Products
+﻿namespace InventoryManagement.Api.Modules.Catalog.Dtos.Products
 {
     public record ProductResponseDto(
         Guid Id,

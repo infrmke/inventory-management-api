@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Api.Modules.Sales.DTOs.OrderItems
+namespace InventoryManagement.Api.Modules.Sales.Dtos.OrderItems
 {
     public record CreateOrderItemDto(
         [Required(ErrorMessage = "Product ID is required")]
