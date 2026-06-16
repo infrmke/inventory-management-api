@@ -1,7 +1,9 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.Data;
+using InventoryManagement.Api.Modules.Catalog.DTOs.Categories;
 using InventoryManagement.Api.Modules.Catalog.DTOs.Products;
 using InventoryManagement.Api.Modules.Catalog.Entities;
 using InventoryManagement.Api.Shared.Exceptions;
+using InventoryManagement.Api.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Catalog.Services.Products
@@ -15,20 +17,75 @@ namespace InventoryManagement.Api.Modules.Catalog.Services.Products
             _context = context;
         }
 
-        public async Task<IEnumerable<ProductResponseDto>> GetAllAsync()
+        public async Task<PagedResult<ProductResponseDto>> GetPagedAsync(ProductPageParams @params)
         {
-            var products = await _context.Products.AsNoTracking().ToListAsync();
+            // inicia o IQueryable
+            var query = _context.Products.AsNoTracking();
 
-            return products.Select(product => new ProductResponseDto(
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.CategoryId,
-                product.CreatedAt,
-                product.UpdatedAt
-            ));
+            if (!string.IsNullOrWhiteSpace(@params.Search))
+            {
+                query = query.Where(product => product.Name.Contains(@params.Search));
+            }
+
+            // filtro de ctegoria específica
+            if (@params.CategoryId.HasValue)
+            {
+                query = query.Where(product => product.CategoryId == @params.CategoryId.Value);
+            }
+
+            // filtro de preço mínimo
+            if (@params.MinPrice.HasValue)
+            {
+                query = query.Where(product => product.Price >= @params.MinPrice.Value);
+            }
+
+            // filtro de preço máximo
+            if (@params.MaxPrice.HasValue)
+            {
+                query = query.Where(product => product.Price <= @params.MaxPrice.Value);
+            }
+
+            // ordenação dinâmica com padrão "name,asc"
+            var sortParts = @params.Sort?.Split(',') ?? ["name", "asc"];
+            var property = sortParts[0].ToLower();
+            var direction = sortParts.Length > 1 ? sortParts[1].ToLower() : "asc";
+
+            // aplicando a direção (asc / desc) correta
+            query = property switch
+            {
+                "id" => direction == "desc" ? query.OrderByDescending(product => product.Id) : query.OrderBy(product => product.Id),
+
+                "name" => direction == "desc" ? query.OrderByDescending(product => product.Name) : query.OrderBy(product => product.Name),
+
+                "price" => direction == "desc" ? query.OrderByDescending(product => product.Price) : query.OrderBy(product => product.Price),
+
+                _ => direction == "desc" ? query.OrderByDescending(product => product.Name) : query.OrderBy(product => product.Name)
+            };
+
+            var totalElements = await query.CountAsync(); // elementos dentro do filtro
+            var skip = @params.Skip; // quantos registros pular
+
+            var products = await query
+                .Skip(skip)
+                .Take(@params.Size)
+                .Select(product => 
+                    new ProductResponseDto(
+                        product.Id, 
+                        product.Name, 
+                        product.Description, 
+                        product.Price, 
+                        product.StockQuantity, 
+                        product.CategoryId, 
+                        product.CreatedAt, 
+                        product.UpdatedAt
+                    )).ToListAsync();
+
+            return new PagedResult<ProductResponseDto>(
+                products,
+                @params.Page,
+                @params.Size,
+                totalElements
+            );
         }
 
         public async Task<ProductResponseDto?> GetByIdAsync(Guid id)
@@ -61,15 +118,15 @@ namespace InventoryManagement.Api.Modules.Catalog.Services.Products
                 .Where(product => product.CategoryId == categoryId)
                 .ToListAsync();
 
-            return products.Select(product => 
+            return products.Select(product =>
                 new ProductResponseDto(
-                    product.Id, 
-                    product.Name, 
-                    product.Description, 
-                    product.Price, 
-                    product.StockQuantity, 
-                    product.CategoryId, 
-                    product.CreatedAt, 
+                    product.Id,
+                    product.Name,
+                    product.Description,
+                    product.Price,
+                    product.StockQuantity,
+                    product.CategoryId,
+                    product.CreatedAt,
                     product.UpdatedAt
                 )
             );

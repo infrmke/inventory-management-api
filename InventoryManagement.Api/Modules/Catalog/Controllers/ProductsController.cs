@@ -17,10 +17,10 @@ namespace InventoryManagement.Api.Modules.Catalog.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] ProductPageParams @params)
         {
-            var products = await _productService.GetAllAsync();
-            return Ok(products);
+            var pagedProducts = await _productService.GetPagedAsync(@params);
+            return Ok(pagedProducts);
         }
 
         [HttpGet("{id}")]

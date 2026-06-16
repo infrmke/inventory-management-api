@@ -1,11 +1,12 @@
 ﻿using InventoryManagement.Api.Modules.Catalog.DTOs.Products;
+using InventoryManagement.Api.Shared.Pagination;
 
 namespace InventoryManagement.Api.Modules.Catalog.Services.Products
 {
     public interface IProductService
     {
         // CRUD:
-        Task<IEnumerable<ProductResponseDto>> GetAllAsync();
+        Task<PagedResult<ProductResponseDto>> GetPagedAsync(ProductPageParams @params);
         Task<ProductResponseDto?> GetByIdAsync(Guid id);
         Task<ProductResponseDto> CreateAsync(CreateProductDto dto);
         Task<ProductResponseDto?> UpdateAsync(Guid id, UpdateProductDto dto);
