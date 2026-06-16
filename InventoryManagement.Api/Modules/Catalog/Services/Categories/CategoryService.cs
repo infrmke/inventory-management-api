@@ -43,8 +43,8 @@ namespace InventoryManagement.Api.Modules.Catalog.Services.Categories
                 _ => direction == "desc" ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name)
             };
 
-            var totalElements = await query.CountAsync(); // total de elementos que passaram pelo filtro
-            var skip = @params.Page * @params.Size; // quantos registros pular
+            var totalElements = await query.CountAsync(); // elementos dentro do filtro
+            var skip = @params.Skip; // quantos registros pular
 
             var categories = await query
                 .Skip(skip)
@@ -56,9 +56,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services.Categories
                         category.Description, 
                         category.CreatedAt, 
                         category.UpdatedAt
-                    )
-                )
-                .ToListAsync();
+                    )).ToListAsync();
 
             return new PagedResult<CategoryResponseDto>(
                 categories, 
