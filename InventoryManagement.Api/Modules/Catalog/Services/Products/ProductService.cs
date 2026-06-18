@@ -27,7 +27,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services.Products
                 query = query.Where(product => product.Name.Contains(@params.Search));
             }
 
-            // filtro de ctegoria específica
+            // filtro de categoria específica
             if (@params.CategoryId.HasValue)
             {
                 query = query.Where(product => product.CategoryId == @params.CategoryId.Value);
@@ -46,7 +46,7 @@ namespace InventoryManagement.Api.Modules.Catalog.Services.Products
             }
 
             // ordenação dinâmica com padrão "name,asc"
-            var sortParts = @params.Sort?.Split(',') ?? ["name", "asc"];
+            var sortParts = @params.Sort?.Split(",") ?? ["name", "asc"];
             var property = sortParts[0].ToLower();
             var direction = sortParts.Length > 1 ? sortParts[1].ToLower() : "asc";
 
