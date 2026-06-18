@@ -73,12 +73,12 @@ namespace InventoryManagement.Api.Modules.Sales.Controllers
             return Ok(updatedOrder);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPatch("{id}")]
         [ValidateGuid("id")]
         public async Task<IActionResult> Cancel(string id)
         {
-            var cancelled = await _orderService.CancelAsync(Guid.Parse(id));
-            return Ok(cancelled);
+            await _orderService.CancelAsync(Guid.Parse(id));
+            return NoContent();
         }
     }
 }
