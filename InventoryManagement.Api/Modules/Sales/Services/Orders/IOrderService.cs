@@ -1,12 +1,13 @@
 ﻿using InventoryManagement.Api.Modules.Sales.Dtos.Orders;
 using InventoryManagement.Api.Modules.Sales.Dtos.OrderItems;
+using InventoryManagement.Api.Shared.Pagination;
 
 namespace InventoryManagement.Api.Modules.Sales.Services.Orders
 {
     public interface IOrderService
     {
         // CRUD:
-        Task<IEnumerable<OrderResponseDto>> GetAllAsync();
+        Task<PagedResult<OrderResponseDto>> GetPagedAsync(OrderPageParams @params);
         Task<OrderResponseDto?> GetByIdAsync(Guid id);
         Task<OrderResponseDto> CreateAsync(CreateOrderDto dto);
         Task<OrderResponseDto?> CancelAsync(Guid id);

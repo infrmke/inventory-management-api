@@ -4,6 +4,7 @@ using InventoryManagement.Api.Modules.Sales.Dtos.OrderItems;
 using InventoryManagement.Api.Modules.Sales.Dtos.Orders;
 using InventoryManagement.Api.Modules.Sales.Entities;
 using InventoryManagement.Api.Shared.Exceptions;
+using InventoryManagement.Api.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Api.Modules.Sales.Services.Orders
@@ -19,34 +20,80 @@ namespace InventoryManagement.Api.Modules.Sales.Services.Orders
             _productService = productService;
         }
 
-        public async Task<IEnumerable<OrderResponseDto>> GetAllAsync()
+        public async Task<PagedResult<OrderResponseDto>> GetPagedAsync(OrderPageParams @params)
         {
-            var orders = await _context.Orders
-                .Include(order => order.Items)
-                .AsNoTracking()
-                .ToListAsync();
+            // inicia o IQueryable
+            var query = _context.Orders.AsNoTracking();
 
-            return orders.Select(order =>
+            // filtro de produto específico
+            if (@params.ProductId.HasValue)
             {
-                var itemsDto = order.Items.Select(item =>
-                    new OrderItemResponseDto(
-                        item.Id,
-                        item.OrderId,
-                        item.ProductId,
-                        item.Quantity,
-                        item.UnitPrice
-                    )
-                ).ToList();
+                query = query.Where(order => order.Items.Any(item => item.ProductId == @params.ProductId));
+            }
 
-                return new OrderResponseDto(
-                    order.Id,
-                    order.TotalPrice,
-                    order.Status,
-                    itemsDto,
-                    order.CreatedAt,
-                    order.UpdatedAt
-                );
-            });
+            // filtro de preço total mínimo
+            if (@params.MinTotal.HasValue)
+            {
+                query = query.Where(order => order.TotalPrice >= @params.MinTotal);
+            }
+
+            // filtro de preço total máximo
+            if (@params.MaxTotal.HasValue)
+            {
+                query = query.Where(order => order.TotalPrice <= @params.MaxTotal);
+            }
+
+            // filtro de status
+            if (@params.Status.HasValue)
+            {
+                query = query.Where(order => order.Status == @params.Status);
+            }
+
+            // ordenação dinâmica com padrão "createdAt,desc"
+            var sortParts = @params.Sort?.Split(",") ?? ["createdAt", "desc"];
+            var property = sortParts[0].ToLower();
+            var direction = sortParts.Length > 1 ? sortParts[1].ToLower() : "asc";
+
+            // aplicando a direção (asc / desc) correta
+            query = property switch
+            {
+                "id" => direction == "desc" ? query.OrderByDescending(order => order.Id) : query.OrderBy(order => order.Id),
+
+                "totalprice" => direction == "desc" ? query.OrderByDescending(order => order.TotalPrice) : query.OrderBy(order => order.TotalPrice),
+
+                "createdat" => direction == "desc" ? query.OrderByDescending(order => order.CreatedAt) : query.OrderBy(order => order.CreatedAt),
+
+                _ => direction == "desc" ? query.OrderByDescending(order => order.CreatedAt) : query.OrderBy(order => order.CreatedAt)
+            };
+
+            var totalElements = await query.CountAsync(); // elementos dentro do filtro
+            var skip = @params.Skip; // quantos registros pular
+
+            var orders = await query
+                .Skip(skip)
+                .Take(@params.Size)
+                .Select(order => 
+                    new OrderResponseDto(
+                        order.Id,
+                        order.TotalPrice,
+                        order.Status,
+                        order.Items.Select(item => new OrderItemResponseDto(
+                            item.Id,
+                            item.OrderId,
+                            item.ProductId,
+                            item.Quantity,
+                            item.UnitPrice
+                        )).ToList(),
+                        order.CreatedAt,
+                        order.UpdatedAt
+                    )).ToListAsync();
+
+            return new PagedResult<OrderResponseDto>(
+                orders,
+                @params.Page,
+                @params.Size,
+                totalElements
+            );
         }
 
         public async Task<OrderResponseDto?> GetByIdAsync(Guid id)
