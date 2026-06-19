@@ -18,6 +18,8 @@ O sistema é estruturado como um Monólito Modular, tendo módulos módulos inde
 
 O back-end segue o padrão de arquitetura de Monólito Modular, possuindo uma separação estrita de responsabilidades por módulos de negócio. Ainda, conta com uma estrutura de fluxo de dados CSR (Controller-Service-Repository) onde os Controllers expõem os endpoints, os Services processam as regras de negócio e o Entity Framework atua como a camada de persistência.
 
+- **Design de Interfaces Híbrido (CRUD e Task-Based):** Separação clara entre operações de persistência (CRUD) e métodos baseados em intenções reais de negócio (Task-Based);
+- **CQRS Semântico:** Segregação entre operações de escrita e leitura a nível de métodos e serviços. Fluxos de leitura gerenciam exclusivamente a recuperação de dados com AsNoTracking() e fluxos de escrita recebem DTOs para criar ou modificar o estado das entidades de domínio;
 - **Imutabilidade com Records e Init-Only Setters:** Uso de records para DTOs e modificadores "init" nas propriedades de Chave Primária (Id) e Chave Estrangeira (FK), garantindo que a identidade dos objetos permaneça imutável após a criação;
 - **Identificadores UUID/Guid Sequenciais:** Utilização de Guid em vez de "int" para as chaves do sistema, configurados nativamente no banco de dados com NEWSEQUENTIALID();
 - **Lazy Loading:** Uso controlado do modificador "virtual" em propriedades de navegação para habilitar o carregamento sob demanda de relacionamentos em cenários de consultas leves.
@@ -26,6 +28,12 @@ O back-end segue o padrão de arquitetura de Monólito Modular, possuindo uma se
 
 - **Core:** `.NET 8.0` e `ASP.NET Core Web API`;
 - **Documentation:** `OpenAPI` (API Explorer e Swashbuckle) para documentação e interface `SwaggerUI` para interatividade no navegador.
+
+## Funcionalidades
+
+- **Paginação (Offset):** Endpoints de listagem utilizam uma estrutura genérica de metadados (PagedResult), calculando saltos (Skip) e limites (Take) diretamente no banco de dados;
+- **Busca e Filtros Dinâmicos:** Capacidade de buscar registros condicionalmente através de queries parametrizadas (ex: busca por texto em Categorias, ou filtros combinados de preço e categorias em Produtos);
+- **Ordenação Segura:** Sistema de ordenação flexível via query string (estilo "sort=field,direction") com validação baseada em Switch Expressions para proteger a aplicação contra inputs inválidos.
 
 ## Como rodar o projeto
 
@@ -39,7 +47,7 @@ Opcionalmente, o SQL Server Management Studio (SSMS 22) também pode ser instala
 1. Clone o Repositório
 
 ```shell
-	git clone https://github.com/infrmke/inventory-management-api.git
+	git clone https://github.com/infromke/inventory-management-api.git
 	cd inventory-management-api
 ```
 
